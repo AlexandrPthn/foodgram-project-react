@@ -73,7 +73,8 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         verbose_name='Ингредиенты рецепта',
-        through='IngredientsRecipe'
+        through='IngredientsRecipe',
+        related_name='recipes',
     )
     tags = models.ManyToManyField(
         Tag,
@@ -92,18 +93,20 @@ class Recipe(models.Model):
 
 
 class IngredientsRecipe(models.Model):
-    recipe = models.ForeignKey(
-        Recipe,
-        verbose_name='Наименование рецепта',
-        on_delete=models.CASCADE
-    )
     ingredient = models.ForeignKey(
         Ingredient,
         verbose_name='Наименование ингредиента',
         on_delete=models.CASCADE
     )
-    count = models.PositiveSmallIntegerField(
+    recipe = models.ForeignKey(
+        Recipe,
+        verbose_name='Наименование рецепта',
+        on_delete=models.CASCADE
+    )
+    amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
+        blank=False,
+        null=False
     )
 
     class Meta:
@@ -111,7 +114,7 @@ class IngredientsRecipe(models.Model):
         verbose_name_plural = 'Ингредиенты в рецептах'
 
     def __str__(self):
-        return f'Рецепт: {self.recipe} (Ингредиент: {self.ingredient})'
+        return f'Ингредиент: {self.ingredient} (Рецепт: {self.recipe})'
 
 
 class Follow(models.Model):

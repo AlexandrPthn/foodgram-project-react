@@ -54,18 +54,9 @@ class RecipeSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = ('id', 'tags', 'author', 'ingredients',
                   'name', 'image', 'text', 'cooking_time')
-
-    def create(self, validated_data):
-        image = validated_data.pop('image')
-
-        recipe = Recipe.objects.create(image=image,
-                                       author=self.context['request'].user,
-                                       **validated_data)
-
-        tags = self.initial_data.get('tags')
-        recipe.tags.set(tags)
         
-        ingredients_data = self.initial_data.get('ingredients')
+    
+    def ingredient_recipe_create(self, ingredients_data, recipe):
         for ingredient in ingredients_data:
             ingredient_id = Ingredient.objects.get(id=ingredient.get('id'))
             ingredient_amount = ingredient.get('amount')
@@ -73,6 +64,16 @@ class RecipeSerializer(serializers.ModelSerializer):
                                              recipe=recipe,
                                              amount=ingredient_amount
                                              )
+
+    def create(self, validated_data):
+        image = validated_data.pop('image')
+        recipe = Recipe.objects.create(image=image,
+                                       author=self.context['request'].user,
+                                       **validated_data)
+        tags = self.initial_data.get('tags')
+        recipe.tags.set(tags)
+        ingredients_data = self.initial_data.get('ingredients')
+        self.ingredient_recipe_create(ingredients_data, recipe)
         return recipe
     
     def update(self, instance, validated_data):
@@ -87,13 +88,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.save()
         IngredientsRecipe.objects.filter(recipe=instance).delete()
         ingredients_data = self.initial_data.get('ingredients')
-        for ingredient in ingredients_data:
-            ingredient_id = Ingredient.objects.get(id=ingredient.get('id'))
-            ingredient_amount = ingredient.get('amount')
-            IngredientsRecipe.objects.create(ingredient=ingredient_id,
-                                             recipe=instance,
-                                             amount=ingredient_amount
-                                             )
+        self.ingredient_recipe_create(ingredients_data, instance)
         return instance
 
 

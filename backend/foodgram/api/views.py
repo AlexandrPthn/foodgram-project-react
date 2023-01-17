@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from recipes.models import Tag, Ingredient, Recipe, IngredientsRecipe
 from users.models import CustomUser
 from .serializers import (CustomUserSerializer, TagSerializer,
-                          IngredientSerializer, RecipeSerializer,
-                          IngredientsRecipeSerializer)
+                          IngredientSerializer, RecipeSerializer)
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -35,8 +34,5 @@ class IngredientViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    
 
-
-class IngredientsRecipeViewSet(viewsets.ModelViewSet):
-    queryset = IngredientsRecipe.objects.all()
-    serializer_class = IngredientsRecipeSerializer

@@ -105,8 +105,6 @@ class IngredientsRecipe(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
-        blank=False,
-        null=False
     )
 
     class Meta:

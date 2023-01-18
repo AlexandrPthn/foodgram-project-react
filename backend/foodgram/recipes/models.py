@@ -83,7 +83,7 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления'
     )
-    
+
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
@@ -119,17 +119,20 @@ class Follow(models.Model):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name="follower"
+        related_name="follower",
+        verbose_name='Подписчик'
     )
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name="following"
+        related_name="following",
+        verbose_name='Автор'
     )
 
     class Meta:
         verbose_name = 'Подписки'
         verbose_name_plural = 'Подписки'
+        unique_together = ("user", "author")
 
 
 class FavoriteRecipe(models.Model):
@@ -149,7 +152,32 @@ class FavoriteRecipe(models.Model):
     class Meta:
         verbose_name = "Избранный рецепт"
         verbose_name_plural = "Избранные рецепты"
-        ordering = ['user']
 
     def __str__(self):
         return self.user.username
+
+
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='shopping_cart',
+        verbose_name='Пользователь'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='shopping_cart',
+        verbose_name='Рецепт'
+    )
+
+    class Meta:
+        verbose_name = 'Список покупок'
+        verbose_name_plural = 'Списки покупок'
+        constraints = [
+            models.UniqueConstraint(fields=('user', 'recipe'),
+                                    name='unique_user_recipe_shopping_list')
+        ]
+
+    def __str__(self):
+        return (f'Список покупок пользователя {self.user.username}')

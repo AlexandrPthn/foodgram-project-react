@@ -12,7 +12,8 @@ from .serializers import (CustomUserSerializer, TagSerializer,
                           IngredientSerializer, RecipeSerializer,
                           FollowSerializer,
                           FavoriteShoppingCartSerializer)
-from api.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from .pagination import LimitPagePagination
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -83,11 +84,12 @@ class IngredientViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+    permission_classes = (IsAuthorOrReadOnly,)
+    pagination_class = LimitPagePagination
 
     @action(detail=True,
             methods=['POST', 'DELETE'],
-            permission_classes=(IsOwnerOrReadOnly,))
+            permission_classes=(IsAuthenticated,))
     def favorite(self, request, **kwargs):
         if request.method == 'POST':
             return self.add_recipe(FavoriteRecipe,
@@ -100,7 +102,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=True,
             methods=['GET', 'POST', 'DELETE'],
-            permission_classes=(IsOwnerOrReadOnly,))
+            permission_classes=(IsAuthenticated,))
     def shopping_cart(self, request, **kwargs):
         if request.method == 'POST':
             return self.add_recipe(ShoppingCart,

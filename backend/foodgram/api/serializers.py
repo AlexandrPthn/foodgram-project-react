@@ -139,7 +139,7 @@ class FollowRecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'name', 'image', 'cooking_time')
 
 
-class FavoriteRecipeSerializer(serializers.ModelSerializer):
+class FavoriteShoppingCartSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='recipe.name')
     image = Base64ImageField(source='recipe.image')
     cooking_time = serializers.ReadOnlyField(source='recipe.cooking_time')

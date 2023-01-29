@@ -1,6 +1,6 @@
 from django.db import models
 
-from users.models import CustomUser
+from users.models import User
 
 
 class Ingredient(models.Model):
@@ -54,7 +54,7 @@ class Recipe(models.Model):
         max_length=256
     )
     author = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name="recipes",
         verbose_name="Автор",
@@ -78,6 +78,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
+        related_name='recipes',
         verbose_name='Тэги рецепта'
     )
     cooking_time = models.PositiveSmallIntegerField(
@@ -117,13 +118,13 @@ class IngredientsRecipe(models.Model):
 
 class Follow(models.Model):
     user = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name="follower",
         verbose_name='Подписчик'
     )
     author = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name="following",
         verbose_name='Автор'
@@ -137,15 +138,15 @@ class Follow(models.Model):
 
 class FavoriteRecipe(models.Model):
     user = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
-        related_name='favorite_recipes',
+        related_name='favoriterecipes',
         verbose_name='Автор'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favorite_recipes',
+        related_name='favoriterecipes',
         verbose_name='Избранный рецепт'
     )
 
@@ -159,15 +160,15 @@ class FavoriteRecipe(models.Model):
 
 class ShoppingCart(models.Model):
     user = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
-        related_name='shopping_cart',
+        related_name='shoppingcarts',
         verbose_name='Пользователь'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='shopping_cart',
+        related_name='shoppingcarts',
         verbose_name='Рецепт'
     )
 

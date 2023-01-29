@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class CustomUser(AbstractUser):
+class User(AbstractUser):
     USER = 'user'
     ADMIN = 'admin'
 
@@ -26,24 +26,9 @@ class CustomUser(AbstractUser):
         verbose_name='Фамилия',
         max_length=150,
     )
-    role = models.CharField(
-        verbose_name='Роль',
-        max_length=20,
-        choices=ROLE_CHOICES,
-        default=USER,
-    )
 
     USERNAME_FIELD = 'email'
-
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
-
-    @property
-    def is_user(self):
-        return self.role == self.USER
-
-    @property
-    def is_admin(self):
-        return self.role == self.ADMIN
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
 
     class Meta:
         ordering = ('id',)

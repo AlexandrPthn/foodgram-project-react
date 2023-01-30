@@ -26,14 +26,27 @@ class User(AbstractUser):
         verbose_name='Фамилия',
         max_length=150,
     )
+    role = models.CharField(
+        verbose_name='Статус',
+        choices=ROLE_CHOICES,
+        default=USER,
+        max_length=20)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
+    
+    @property
+    def is_admin(self):
+        return self.is_superuser or self.is_staff or self.role == User.ADMIN
+
+    @property
+    def is_block(self):
+        return self.role == User.BLOCK
+    
+    def __str__(self):
+        return self.username
 
     class Meta:
         ordering = ('id',)
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
-    def __str__(self):
-        return self.username

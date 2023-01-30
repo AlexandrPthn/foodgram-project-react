@@ -1,8 +1,33 @@
+from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (FavoriteRecipe, Follow, Ingredient,
                             IngredientsRecipe, Recipe, ShoppingCart, Tag)
 from rest_framework import serializers
 from users.models import User
+
+
+class CreateUserSerializers(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={'input_type': 'Пароль', 'placeholder': 'Пароль'}
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'password',
+        )
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(
+            validated_data.get('password'))
+        return super(CreateUserSerializers, self).create(validated_data)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -200,9 +225,10 @@ class FollowSerializer(UserSerializer):
                   'is_subscribed', 'recipes', 'recipes_count')
 
     def get_is_subscribed(self, obj):
-        return Follow.objects.filter(
-            user=obj.user, author=obj.author
-        ).exists()
+        user = self.context.get('request').user
+        if user.is_anonymous:
+            return False
+        return Follow.objects.filter(user=user, author=obj.author).exists()
 
     def get_recipes(self, obj):
         request = self.context.get('request')
@@ -211,6 +237,9 @@ class FollowSerializer(UserSerializer):
         if limit:
             queryset = queryset[:int(limit)]
         return FollowRecipeSerializer(queryset, many=True).data
+    
+    def get_recipes_count(self, obj):
+        return Recipe.objects.filter(author=obj.author).count()
 
 
 class FollowRecipeSerializer(serializers.ModelSerializer):

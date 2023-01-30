@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import MinValueValidator
+from django.db.models import UniqueConstraint
 from users.models import User
 
 
@@ -85,6 +87,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -105,11 +108,16 @@ class IngredientsRecipe(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
+        validators=[MinValueValidator(1, message='Минимальное количество 1!')]
     )
 
     class Meta:
         verbose_name = 'Ингредиент в рецептах'
         verbose_name_plural = 'Ингредиенты в рецептах'
+        constraints = [
+            UniqueConstraint(fields=['ingredient', 'recipe'],
+                             name='unique_recipe')
+        ]
 
     def __str__(self):
         return f'Ингредиент: {self.ingredient} (Рецепт: {self.recipe})'
@@ -132,7 +140,10 @@ class Follow(models.Model):
     class Meta:
         verbose_name = 'Подписки'
         verbose_name_plural = 'Подписки'
-        unique_together = ("user", "author")
+        constraints = [
+            UniqueConstraint(fields=['user', 'author'],
+                             name='unique_follow')
+        ]
 
 
 class FavoriteRecipe(models.Model):
@@ -152,6 +163,10 @@ class FavoriteRecipe(models.Model):
     class Meta:
         verbose_name = "Избранный рецепт"
         verbose_name_plural = "Избранные рецепты"
+        constraints = [
+            UniqueConstraint(fields=['user', 'recipe'],
+                             name='unique_favorite')
+        ]
 
     def __str__(self):
         return self.user.username
@@ -174,8 +189,10 @@ class ShoppingCart(models.Model):
     class Meta:
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
-        models.UniqueConstraint(fields=['user', 'recipe'],
-                                name='unique_recording')
+        constraints = [
+            UniqueConstraint(fields=['user', 'recipe'],
+                             name='unique_shopping')
+        ]
 
     def __str__(self):
         return (f'Список покупок пользователя {self.user.username}')

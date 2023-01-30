@@ -4,24 +4,21 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
+from recipes.models import (FavoriteRecipe, Follow, Ingredient,
+                            IngredientsRecipe, Recipe, ShoppingCart, Tag)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import (AllowAny, IsAuthenticated)
-from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
-
-from recipes.models import (Tag, Ingredient, Recipe, Follow,
-                            FavoriteRecipe, ShoppingCart,
-                            IngredientsRecipe)
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from users.models import User
 
-from .filters import TagFilter, IngredientFilter
-from .serializers import (UserSerializer, TagSerializer,
-                          IngredientSerializer, RecipeCreateSerializer,
-                          RecipeReadSerializer, FollowSerializer,
-                          FavoriteShoppingCartSerializer)
-from .permissions import IsAdminOrReadOnly
+from .filters import IngredientFilter, TagFilter
 from .pagination import LimitPagePagination
+from .permissions import IsAdminOrReadOnly
+from .serializers import (FavoriteShoppingCartSerializer, FollowSerializer,
+                          IngredientSerializer, RecipeCreateSerializer,
+                          RecipeReadSerializer, TagSerializer, UserSerializer)
 
 
 class UserViewSet(UserViewSet):
@@ -143,7 +140,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer = FavoriteShoppingCartSerializer(
             instance,
             context={'request': request}
-            )
+        )
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     def delete_recipe(self, model, request, pk):

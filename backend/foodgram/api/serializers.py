@@ -237,7 +237,7 @@ class FollowSerializer(UserSerializer):
         if limit:
             queryset = queryset[:int(limit)]
         return FollowRecipeSerializer(queryset, many=True).data
-    
+
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj.author).count()
 

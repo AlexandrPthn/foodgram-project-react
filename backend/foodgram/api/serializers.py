@@ -1,9 +1,8 @@
 from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework import serializers
-
 from recipes.models import (FavoriteRecipe, Follow, Ingredient,
                             IngredientsRecipe, Recipe, ShoppingCart, Tag)
+from rest_framework import serializers
 from users.models import User
 
 

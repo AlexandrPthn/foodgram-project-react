@@ -1,9 +1,8 @@
 from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework import serializers
-
 from recipes.models import (FavoriteRecipe, Follow, Ingredient,
                             IngredientsRecipe, Recipe, ShoppingCart, Tag)
+from rest_framework import serializers
 from users.models import User
 
 
@@ -109,7 +108,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
-    image = Base64ImageField()
+    image = Base64ImageField(max_length=None, use_url=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
         many=True
@@ -198,6 +197,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
+        if validated_data.get('image') is not None:
+            instance.image = validated_data.get('image', instance.image)
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredientsrecipe_set')
         instance = super().update(instance, validated_data)

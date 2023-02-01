@@ -20,10 +20,6 @@ jobs:
         pip install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
         pip install -r requirements.txt 
 
-    - name: Test with flake8 and django tests
-      run: |
-        cd backend/foodgram
-
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest

@@ -6,7 +6,7 @@ from recipes.models import Ingredient
 
 class Command(BaseCommand):
     def handle(self, *args, **options) -> None:
-        
+
         with open('data/ingredients.json', 'rb') as f:
             data = json.load(f)
             for i in data:

@@ -7,11 +7,11 @@ from users.models import User
 class Ingredient(models.Model):
     name = models.CharField(
         verbose_name='Название',
-        max_length=50
+        max_length=100
     )
     measurement_unit = models.CharField(
         verbose_name='Единицы измерения ингредиента',
-        max_length=50
+        max_length=20
     )
 
     class Meta:

@@ -11,7 +11,7 @@ services:
     restart: always
 
   backend:
-    image: alex73python/foodgram-backend:latest
+    image: alex73python/foodgram_backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -23,7 +23,7 @@ services:
       - ./.env
 
   frontend:
-    image: alex73python/foodgram-frontend:latest
+    image: alex73python/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
 

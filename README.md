@@ -18,7 +18,6 @@
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat&logo=Yandex.Cloud&logoColor=56C0C0&color=008080)](https://cloud.yandex.ru/)
 
 ### Workflow
-Ip сервера 51.250.85.165
 - tests - Проверка кода на соответствие стандарту PEP8 (с помощью пакета flake8) и запуск pytest. Дальнейшие шаги выполнятся только если push был в ветку master или main.
 - build_and_push_to_docker_hub - Сборка и доставка докер-образов на Docker Hub
 - deploy - Автоматический деплой проекта на боевой сервер. Выполняется копирование файлов из репозитория на сервер:
@@ -73,3 +72,35 @@ sudo docker compose exec backend python manage.py collectstatic --noinput
 ```
  sudo docker-compose exec backend python manage.py load_data
 ```
+Ссылка на проект:
+http://51.250.85.165/
+Документация:
+http://51.250.85.165/api/docs/
+
+#### Подготовка запуска локально
+Клонировать репозиторий:
+```
+git clone https://github.com/AlexandrPthn/foodgram-project-react.git
+```
+В каталога /infra_local выполнить:
+```
+docker-compose up -d --build
+```
+После успешной сборки выполнить миграции:
+```
+docker compose exec backend python manage.py migrate
+```
+Создать суперпользователя:
+```
+docker compose exec backend python manage.py createsuperuser
+```
+Собрать статику:
+```
+docker compose exec backend python manage.py collectstatic --noinput
+```
+Наполнить базу данных содержимым из файла ingredients.json:
+```
+ docker-compose exec backend python manage.py load_data
+```
+Автор
+Кокушин Александр

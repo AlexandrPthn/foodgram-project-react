@@ -22,7 +22,7 @@
 - deploy - Автоматический деплой проекта на боевой сервер. Выполняется копирование файлов из репозитория на сервер:
 
 
-#### Подготовка для запуска workflow
+### Подготовка для запуска workflow
 Клонировать репозиторий:
 ```
 git clone https://github.com/AlexandrPthn/foodgram-project-react.git
@@ -76,7 +76,7 @@ http://51.250.85.165/
 Документация:
 http://51.250.85.165/api/docs/
 
-#### Подготовка запуска локально
+### Подготовка запуска локально
 Клонировать репозиторий:
 ```
 git clone https://github.com/AlexandrPthn/foodgram-project-react.git

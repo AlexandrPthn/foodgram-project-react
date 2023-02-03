@@ -10,16 +10,15 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from recipes.models import (FavoriteRecipe, Follow, Ingredient,
-                            IngredientsRecipe, Recipe, ShoppingCart, Tag)
-from users.models import User
-
 from .filters import IngredientFilter, TagFilter
 from .pagination import LimitPagePagination
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from .serializers import (FavoriteShoppingCartSerializer, FollowSerializer,
                           IngredientSerializer, RecipeCreateSerializer,
                           RecipeReadSerializer, TagSerializer, UserSerializer)
+from recipes.models import (FavoriteRecipe, Follow, Ingredient,
+                            IngredientsRecipe, Recipe, ShoppingCart, Tag)
+from users.models import User
 
 
 class UserViewSet(UserViewSet):

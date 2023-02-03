@@ -206,7 +206,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         instance.tags.clear()
         instance.tags.set(tags)
         instance.ingredients.clear()
-        IngredientsRecipe.objects.filter(recipe=instance).delete()
         self.ingredients_create(ingredients, instance)
         return instance
 
